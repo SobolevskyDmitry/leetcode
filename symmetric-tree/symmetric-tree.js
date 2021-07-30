@@ -11,16 +11,28 @@
  * @return {boolean}
  */
 var isSymmetric = function(root) {
- return isMirror(root, root)
+ const queue = [root, root];
+    
+  while(queue.length) {
+      let l = queue.shift();
+      let r = queue.shift();
+      
+      if(!l && !r) {
+          continue;
+      }
+      
+      if(!l || !r) {
+        return false;  
+      }
+      
+      if(l.val !== r.val) {
+          return false;
+      }
+      
+      queue.push(l.right, r.left);
+      queue.push(l.left, r.right);
+  }  
+    
+    
+  return true;
 };
-
-function isMirror(t1, t2) {
-    if(t1 === null && t2 === null) return true;
-    if(t1 === null || t2 === null) return false;
-    
-    console.log(t1.val, t2.val)
-    
-    return t1.val === t2.val 
-        && isMirror(t1.right, t2.left) 
-        && isMirror(t1.left, t2.right);
-}
