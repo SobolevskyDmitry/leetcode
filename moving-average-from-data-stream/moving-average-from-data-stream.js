@@ -3,7 +3,10 @@
  * @param {number} size
  */
 var MovingAverage = function(size) {
-    this.queue = new FixQueue(size);
+    this.size = size; 
+    this.sum = 0;
+    this.queue = [];
+    
 };
 
 /** 
@@ -11,10 +14,15 @@ var MovingAverage = function(size) {
  * @return {number}
  */
 MovingAverage.prototype.next = function(val) {
-    this.queue.add(val);
-    const sum = this.queue.peekSum();
+    this.queue.push(val);
     
-    return this.queue.peekSum() / this.queue.size;
+    if(this.queue.length > this.size) {
+        this.sum -= this.queue.shift();
+    }
+    
+    this.sum +=val;
+    
+    return this.sum / this.queue.length;
 };
 
 /** 
@@ -23,28 +31,3 @@ MovingAverage.prototype.next = function(val) {
  * var param_1 = obj.next(val)
  */
 
-
-class FixQueue {
-    constructor(size) {
-        this.maxLength = size;
-    }
-    
-    arr = [];
-
-    add(val) {
-        if(this.arr.length === this.maxLength) {
-            this.arr.shift();
-        }
-        
-       this.arr.push(val); 
-    }
-
-    peekSum() {
-        return this.arr.reduce((acc, val) => acc + +val, 0);
-    }
-
-    get size() {
-        return this.arr.length;
-    }
-    
-}
